@@ -6,6 +6,9 @@ bin-release/
 
 # Other files and folders
 .settings/
+.DS_Store
+.classpath
+.project
 
 # Executables
 *.swf
