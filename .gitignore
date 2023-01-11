@@ -9,6 +9,8 @@ bin-release/
 .DS_Store
 .classpath
 .project
+./setupJenkinsAgent/
+./springboot-rest-api-mongodb/
 
 # Executables
 *.swf
