@@ -19,13 +19,13 @@ import com.mszlu.blog.vo.params.LoginPara;
 
 @Service
 public class LoginServiceImpl implements LoginService{
-	
+
 	@Autowired
 	private SysUserService sysUserService;
-	
+
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
-	
+
 	private static final String slat = "mszlu!@#";
 
 	@Override
@@ -43,7 +43,7 @@ public class LoginServiceImpl implements LoginService{
 		if(StringUtils.isBlank(account)||StringUtils.isBlank(password)) {
 			return Result.fail(ErrorCode.PARAMS_ERROR.getCode(),ErrorCode.PARAMS_ERROR.getMsg());
 		}
-		
+
 		password = DigestUtils.md5Hex(password + slat);
 		SysUser sysUser = sysUserService.findUser(account, password);
 		if(sysUser == null) {
@@ -53,7 +53,7 @@ public class LoginServiceImpl implements LoginService{
 		redisTemplate.opsForValue().set("TOKEN_"+token,JSON.toJSONString(sysUser),1,TimeUnit.DAYS);
 		return Result.success(token);
 	}
-	
-	
+
+
 
 }

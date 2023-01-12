@@ -8,6 +8,6 @@ import com.mszlu.blog.vo.Archive;
 
 public interface ArticleMapper extends BaseMapper<Article> {
 	List<Archive> listArchives();
-	
+
 }
 

@@ -11,16 +11,16 @@ import com.mszlu.blog.vo.Result;
 @RestController
 @RequestMapping("tags")
 public class TagsController {
-	
+
 	@Autowired
 	private TagsService tagsService;
-	
-	
+
+
 	@GetMapping("hot")
 	public Result hot() {
 		int limit = 6;
 		return tagsService.hots(limit);
-		
+
 	}
 
 }

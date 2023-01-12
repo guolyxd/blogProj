@@ -9,7 +9,7 @@ public interface TagsService {
 	List<TagVo> findTagsByArticleId(Long id);
 
 	Result hots(int limit);
-	
-	
+
+
 
 }

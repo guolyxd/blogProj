@@ -13,15 +13,15 @@ import com.mszlu.blog.vo.params.LoginPara;
 @RestController
 @RequestMapping("login")
 public class LoginController {
-	
+
 	@Autowired
 	private LoginService loginService;
-	
+
 	@PostMapping
 	public Result login(@RequestBody LoginPara loginPara) {
-		
+
 		return loginService.login(loginPara);
 	}
-	
+
 
 }

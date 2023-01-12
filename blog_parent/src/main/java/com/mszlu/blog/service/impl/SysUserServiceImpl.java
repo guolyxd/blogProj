@@ -1,12 +1,12 @@
 package com.mszlu.blog.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mszlu.blog.dao.mapper.SysUserMapper;
 import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.service.SysUserService;
-import com.mszlu.blog.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class SysUserServiceImpl implements SysUserService {
@@ -33,7 +33,7 @@ public class SysUserServiceImpl implements SysUserService {
 		queryWrapper.eq(SysUser::getPassword, password);
 		queryWrapper.select(SysUser::getAccount,SysUser::getId,SysUser::getAvatar,SysUser::getNickname);
 		queryWrapper.last("limit 1");
-		
+
 		return sysUserMapper.selectOne(queryWrapper);
 	}
 }
