@@ -1,5 +1,6 @@
 package com.mszlu.blog.service.impl;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -52,6 +53,28 @@ public class LoginServiceImpl implements LoginService{
 		String token = JWTUtils.createToken(sysUser.getId());
 		redisTemplate.opsForValue().set("TOKEN_"+token,JSON.toJSONString(sysUser),1,TimeUnit.DAYS);
 		return Result.success(token);
+	}
+
+	@Override
+	public SysUser check(String token) {
+		
+		if(StringUtils.isBlank(token)) {
+			return null;
+		}
+		Map<String, Object> stringObjectMap = JWTUtils.checkToken(token);
+		if(stringObjectMap == null) {
+			return null;
+		}
+		
+		String userJson = redisTemplate.opsForValue().get("TOKEN_"+token);
+		if(StringUtils.isBlank(userJson)) {
+			return null;
+		}
+		
+		SysUser sysUser = JSON.parseObject(userJson, SysUser.class);
+		
+		
+		return sysUser;
 	}
 
 
