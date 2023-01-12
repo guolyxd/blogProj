@@ -13,4 +13,6 @@ public interface LoginService {
 
 	Result logout(String token);
 
+	Result registor(LoginPara loginPara);
+
 }

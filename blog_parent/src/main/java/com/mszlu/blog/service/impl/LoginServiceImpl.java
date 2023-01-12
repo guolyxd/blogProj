@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.mszlu.blog.dao.pojo.SysUser;
@@ -19,6 +20,7 @@ import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.LoginPara;
 
 @Service
+@Transactional //添加事务，要不然会抛异常
 public class LoginServiceImpl implements LoginService{
 
 	@Autowired
@@ -81,6 +83,43 @@ public class LoginServiceImpl implements LoginService{
 	public Result logout(String token) {
 		redisTemplate.delete("TOKEN_"+token);
 		return Result.success(null);
+	}
+
+	@Override
+	public Result registor(LoginPara loginPara) {
+		
+		String account = loginPara.getAccount();
+		String password = loginPara.getPassword();
+		String nickName = loginPara.getNickName();
+		if (StringUtils.isBlank(nickName)
+				||StringUtils.isBlank(password)
+				||StringUtils.isBlank(account)) {
+			return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
+		}
+		
+		SysUser sysUser = sysUserService.findUserByAccount(account);
+		if(sysUser != null) {
+			return Result.fail(ErrorCode.ACCOUNT_EXIST.getCode(),ErrorCode.ACCOUNT_EXIST.getMsg());
+		}
+		
+		sysUser = new SysUser();
+		sysUser.setNickname(nickName);
+        sysUser.setAccount(account);
+        sysUser.setPassword(DigestUtils.md5Hex(password+slat));
+        sysUser.setCreateDate(System.currentTimeMillis());
+        sysUser.setLastLogin(System.currentTimeMillis());
+        sysUser.setAvatar("/static/img/logo.b3a48c0.png");
+        sysUser.setAdmin(1); //1 为true
+        sysUser.setDeleted(0); // 0 为false
+        sysUser.setSalt("");
+        sysUser.setStatus("");
+        sysUser.setEmail("");
+        this.sysUserService.save(sysUser);
+        
+        String token = JWTUtils.createToken(sysUser.getId());
+        redisTemplate.opsForValue().set("TOKEN_"+token, JSON.toJSONString(sysUser),1,TimeUnit.DAYS);
+        
+		return Result.success(token);
 	}
 
 
