@@ -11,4 +11,6 @@ public interface LoginService {
 
 	SysUser check(String token);
 
+	Result logout(String token);
+
 }

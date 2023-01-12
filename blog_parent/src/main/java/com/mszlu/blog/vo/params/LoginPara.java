@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class LoginPara {
 
-	public String account;
-	public String password;
-
+	private String account;
+	private String password;
+	private String nickName;
 
 }
