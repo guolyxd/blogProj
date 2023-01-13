@@ -9,7 +9,7 @@ public interface LoginService {
 
 	Result login(LoginPara loginpara);
 
-	SysUser check(String token);
+	SysUser checkToken(String token);
 
 	Result logout(String token);
 

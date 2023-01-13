@@ -47,7 +47,7 @@ public class SysUserServiceImpl implements SysUserService {
 	@Override
 	public Result findUserByToken(String token) {
 		
-		SysUser sysUser = loginService.check(token);
+		SysUser sysUser = loginService.checkToken(token);
 		if(sysUser == null) {
 			return Result.fail(ErrorCode.TOKEN_ERROR.getCode(), ErrorCode.TOKEN_ERROR.getMsg());
 		}
