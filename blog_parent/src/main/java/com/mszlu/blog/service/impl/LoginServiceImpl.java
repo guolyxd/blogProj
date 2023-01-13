@@ -86,11 +86,11 @@ public class LoginServiceImpl implements LoginService{
 	}
 
 	@Override
-	public Result registor(LoginPara loginPara) {
+	public Result register(LoginPara loginPara) {
 		
 		String account = loginPara.getAccount();
 		String password = loginPara.getPassword();
-		String nickName = loginPara.getNickName();
+		String nickName = loginPara.getNickname();
 		if (StringUtils.isBlank(nickName)
 				||StringUtils.isBlank(password)
 				||StringUtils.isBlank(account)) {

@@ -7,6 +7,6 @@ public class LoginPara {
 
 	private String account;
 	private String password;
-	private String nickName;
+	private String nickname;
 
 }
