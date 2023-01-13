@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ArticleVo {
 
-    private String id;
+    private Long id;
     private String title;
     private String summary;
     private Integer commentCounts;

@@ -10,6 +10,7 @@ public class Article {
 	public static final int Article_Common = 0;
 
 	private Long id;
+	private Long bodyId;
 	private String title;
 	private String summary;
 	private int viewCounts;

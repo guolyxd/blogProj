@@ -1,6 +1,7 @@
 package com.mszlu.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,5 +43,11 @@ public class ArticleController {
 	   {
 		return articleService.listArchives();
 		}
+	
+	@PostMapping("view/{id}")
+	public Result findArticleById(@PathVariable("id") Long articleId) {
+		return articleService.findArticleById(articleId);
+		
+	}
 
 }

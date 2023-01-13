@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import com.alibaba.fastjson.JSON;
 import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.service.LoginService;
+import com.mszlu.blog.utils.UserThreadLocal;
 import com.mszlu.blog.vo.ErrorCode;
 import com.mszlu.blog.vo.Result;
 
@@ -55,8 +56,16 @@ public class LoginInterceptor implements HandlerInterceptor{
 			return false;
 		}
 		
+		UserThreadLocal.put(sysUser);
+		
 		return true;
 		
 	}
+	
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception{
+		//如果不删除 ThreadLocal中用完的信息 会有内存泄漏的风险
+		UserThreadLocal.remove();
+	};
 
 }
