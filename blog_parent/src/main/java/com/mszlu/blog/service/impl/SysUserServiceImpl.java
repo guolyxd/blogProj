@@ -1,5 +1,6 @@
 package com.mszlu.blog.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.mszlu.blog.service.SysUserService;
 import com.mszlu.blog.vo.ErrorCode;
 import com.mszlu.blog.vo.LoginUserVo;
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.UserVo;
 
 @Service
 public class SysUserServiceImpl implements SysUserService {
@@ -75,6 +77,23 @@ public class SysUserServiceImpl implements SysUserService {
 	public void save(SysUser sysUser) {
 		this.sysUserMapper.insert(sysUser);
 		
+	}
+
+	@Override
+	public UserVo findUserVoById(Long id) {
+        //根据id查询
+        //为防止sysUser为空增加一个判断
+        SysUser sysUser = sysUserMapper.selectById(id);
+        if (sysUser == null){
+            sysUser = new SysUser();
+            sysUser.setNickname("码神之路");
+            sysUser.setId(1L);
+            sysUser.setAvatar("/static/img/logo.b3a48c0.png");
+            
+        }
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(sysUser, userVo);
+        return userVo;
 	}
 }
 
