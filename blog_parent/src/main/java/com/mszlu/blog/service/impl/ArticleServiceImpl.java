@@ -19,6 +19,7 @@ import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.service.CategoryService;
 import com.mszlu.blog.service.SysUserService;
 import com.mszlu.blog.service.TagsService;
+import com.mszlu.blog.service.ThreadService;
 import com.mszlu.blog.vo.Archive;
 import com.mszlu.blog.vo.ArticleBodyVo;
 import com.mszlu.blog.vo.ArticleVo;
@@ -140,11 +141,20 @@ public class ArticleServiceImpl implements ArticleService {
 		return Result.success(archives);
 	}
 
+	@Autowired
+	private ThreadService threadService;
 	@Override
 	public Result findArticleById(Long articleId) {
 		
 		Article article = this.articleMapper.selectById(articleId);
 		ArticleVo articleVo = copy(article,true,true,true,true);
+		
+		//查看完文章了，新增阅读数，有没有问题呢？
+        //查看完文章之后，本应该直接返回数据了，这时候做了一个更新操作，更新时加写锁，阻塞其他的读操作，性能就会比较低
+        // 更新 增加了此次接口的 耗时 如果一旦更新出问题，不能影响 查看文章的操作
+        //线程池  可以把更新操作 扔到线程池中去执行，和主线程就不相关了
+		
+		threadService.updateArticleViewCount(articleMapper,article);
 		
 		return Result.success(articleVo);
 	}
