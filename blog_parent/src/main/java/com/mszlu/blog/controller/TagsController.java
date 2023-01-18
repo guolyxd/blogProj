@@ -22,5 +22,11 @@ public class TagsController {
 		return tagsService.hots(limit);
 
 	}
+	
+	@GetMapping
+	public Result tags() {
+		return tagsService.findAll();
+
+	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mszlu.blog.dao.mapper.TagMapper;
 import com.mszlu.blog.dao.pojo.Tag;
 import com.mszlu.blog.service.TagsService;
@@ -60,5 +61,12 @@ public class TagsServiceImpl implements TagsService {
     	List<Long> tagLists = tagMapper.findTagsByTagIds(tagIds);
     	    return Result.success(tagLists);
     }
+
+    
+	@Override
+	public Result findAll() {
+		List<Tag> tags = this.tagMapper.selectList(new LambdaQueryWrapper<>());
+		return Result.success(copyList(tags));
+	}
 }
 
