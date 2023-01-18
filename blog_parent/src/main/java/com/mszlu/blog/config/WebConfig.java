@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.mszlu.blog.handler.LoginInterceptor;
 
 @Configuration
-
 public class WebConfig implements WebMvcConfigurer{
 	
 	@Autowired
@@ -23,7 +22,8 @@ public class WebConfig implements WebMvcConfigurer{
 	
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(loginInterceptor)
-		        .addPathPatterns("/test");
+		        .addPathPatterns("/test")
+		        .addPathPatterns("/comments/create/change");
 	//	        .excludePathPatterns("/register")
 	//	        .excludePathPatterns("/login");
 	}

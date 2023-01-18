@@ -6,16 +6,22 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mszlu.blog.dao.mapper.CommentMapper;
 import com.mszlu.blog.dao.pojo.Comment;
+import com.mszlu.blog.dao.pojo.SysUser;
 import com.mszlu.blog.service.CommentsService;
 import com.mszlu.blog.service.SysUserService;
+import com.mszlu.blog.utils.UserThreadLocal;
 import com.mszlu.blog.vo.CommentVo;
 import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.UserVo;
+import com.mszlu.blog.vo.params.CommentPara;
 
 @Service
+@Transactional
 public class CommentsServiceImpl implements CommentsService{
 	
 	@Autowired
@@ -27,10 +33,10 @@ public class CommentsServiceImpl implements CommentsService{
 	
 
 	@Override
-	public Result commentsArticleById(Long id) {
+	public Result commentsArticleById(Long articleId) {
 		
 		LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<Comment>();
-		queryWrapper.eq(Comment::getArticleId, id);
+		queryWrapper.eq(Comment::getArticleId, articleId);
 		queryWrapper.eq(Comment::getLevel,1);
 		List<Comment> comments = commentMapper.selectList(queryWrapper);
 		List<CommentVo> commentsVo = copyList(comments);
@@ -83,6 +89,33 @@ public class CommentsServiceImpl implements CommentsService{
 		queryWrapper.eq(Comment::getLevel, 2);
 		
 		return copyList(commentMapper.selectList(queryWrapper));
+	}
+
+
+
+	@Override
+	public Result comment(CommentPara commentPara) {
+		
+		SysUser sysUser = UserThreadLocal.get();
+		Comment comment = new Comment();
+		comment.setArticleId(commentPara.getArticleId());
+		comment.setContent(commentPara.getContent());
+		comment.setAuthorId(sysUser.getId());
+		comment.setCreateDate(System.currentTimeMillis());
+		Long parent = commentPara.getParent();
+		if(parent == null || parent == 0) {
+			comment.setLevel(1);
+		}
+		else {
+			comment.setLevel(2);
+		}
+		
+		comment.setParentId(parent == null ? 0 : parent);
+		Long toUserId = commentPara.getToUserId();
+		comment.setToUid(toUserId == null ? 0 : toUserId);
+		this.commentMapper.insert(comment);
+		
+		return Result.success(null);
 	}
 	
 

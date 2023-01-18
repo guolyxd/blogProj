@@ -9,5 +9,4 @@ public class Archives{
 	private Integer month;
 	private Long count;
 
-
 }
