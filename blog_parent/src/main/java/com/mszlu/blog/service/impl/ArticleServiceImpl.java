@@ -1,18 +1,19 @@
 package com.mszlu.blog.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mszlu.blog.dao.mapper.ArticleBodyMapper;
 import com.mszlu.blog.dao.mapper.ArticleMapper;
+import com.mszlu.blog.dao.mapper.ArticleTagMapper;
 import com.mszlu.blog.dao.pojo.Article;
 import com.mszlu.blog.dao.pojo.ArticleBody;
 import com.mszlu.blog.dao.pojo.SysUser;
@@ -21,11 +22,15 @@ import com.mszlu.blog.service.CategoryService;
 import com.mszlu.blog.service.SysUserService;
 import com.mszlu.blog.service.TagsService;
 import com.mszlu.blog.service.ThreadService;
+import com.mszlu.blog.utils.UserThreadLocal;
 import com.mszlu.blog.vo.Archive;
 import com.mszlu.blog.vo.ArticleBodyVo;
+import com.mszlu.blog.vo.ArticleTag;
 import com.mszlu.blog.vo.ArticleVo;
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.TagVo;
 import com.mszlu.blog.vo.UserVo;
+import com.mszlu.blog.vo.params.ArticlePara;
 import com.mszlu.blog.vo.params.PageParams;
 
 
@@ -36,7 +41,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleMapper articleMapper;
     @Autowired
     private TagsService tagService;
-
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
+    
     @Autowired
     private SysUserService sysUserService;
 
@@ -168,6 +175,49 @@ public class ArticleServiceImpl implements ArticleService {
 		ArticleBodyVo articleBodyVo = new ArticleBodyVo();
 		articleBodyVo.setContent(articleBody.getContent());
 		return articleBodyVo;
+	}
+
+	@Override
+	public Result publish(ArticlePara articlePara) {
+		SysUser sysUser = UserThreadLocal.get();
+		
+		//article info
+		Article article = new Article();
+		article.setAuthorId(sysUser.getId());
+		article.setWeight(Article.Article_Common);
+		article.setViewCounts(0);
+		article.setCreateDate(System.currentTimeMillis());
+		article.setCategoryId(articlePara.getCategory().getId());
+		article.setCommentCounts(0);
+		article.setSummary(articlePara.getSummary());
+		article.setTitle(articlePara.getTitle());
+		this.articleMapper.insert(article);
+		
+		//tag
+		List<TagVo> tags = articlePara.getTags();
+		if(tags != null) {
+			for(TagVo tag: tags) {
+			Long articleId = article.getId();
+			ArticleTag articleTag = new ArticleTag();
+			articleTag.setTagId(tag.getId());
+			articleTag.setArticleId(articleId);
+			articleTagMapper.insert(articleTag);
+			}
+		}
+		
+		//body
+		ArticleBody articleBody = new ArticleBody();
+		articleBody.setArticleId(article.getId());
+		articleBody.setContent(articlePara.getBody().getContent());
+		articleBody.setContentHtml(articlePara.getBody().getContentHtml());
+		articleBodyMapper.insert(articleBody);
+		article.setBodyId(articleBody.getId());
+		
+		articleMapper.updateById(article);
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("id", article.getId().toString());
+		return Result.success(map);
 	}
 	
 }

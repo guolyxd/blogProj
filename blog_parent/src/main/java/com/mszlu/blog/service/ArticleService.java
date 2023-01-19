@@ -1,6 +1,7 @@
 package com.mszlu.blog.service;
 
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.params.ArticlePara;
 import com.mszlu.blog.vo.params.PageParams;
 
 public interface ArticleService {
@@ -16,5 +17,6 @@ public interface ArticleService {
 	Result newArticles(int limit);
 	Result listArchives();
 	Result findArticleById(Long articleId);
+	Result publish(ArticlePara articlePara);
 
 }

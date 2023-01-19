@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.vo.Result;
+import com.mszlu.blog.vo.params.ArticleBodyParam;
+import com.mszlu.blog.vo.params.ArticlePara;
 import com.mszlu.blog.vo.params.PageParams;
 
 @RestController
@@ -48,6 +50,11 @@ public class ArticleController {
 	public Result findArticleById(@PathVariable("id") Long articleId) {
 		return articleService.findArticleById(articleId);
 		
+	}
+	
+	@PostMapping("publish")
+	public Result publish(@RequestBody ArticlePara articlePara) {
+		return articleService.publish(articlePara);
 	}
 
 }
