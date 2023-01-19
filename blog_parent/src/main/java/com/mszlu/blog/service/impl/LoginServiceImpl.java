@@ -90,8 +90,8 @@ public class LoginServiceImpl implements LoginService{
 		
 		String account = loginPara.getAccount();
 		String password = loginPara.getPassword();
-		String nickName = loginPara.getNickname();
-		if (StringUtils.isBlank(nickName)
+		String nickname = loginPara.getNickname();
+		if (StringUtils.isBlank(nickname)
 				||StringUtils.isBlank(password)
 				||StringUtils.isBlank(account)) {
 			return Result.fail(ErrorCode.PARAMS_ERROR.getCode(), ErrorCode.PARAMS_ERROR.getMsg());
@@ -103,7 +103,7 @@ public class LoginServiceImpl implements LoginService{
 		}
 		
 		sysUser = new SysUser();
-		sysUser.setNickname(nickName);
+		sysUser.setNickname(nickname);
         sysUser.setAccount(account);
         sysUser.setPassword(DigestUtils.md5Hex(password+slat));
         sysUser.setCreateDate(System.currentTimeMillis());

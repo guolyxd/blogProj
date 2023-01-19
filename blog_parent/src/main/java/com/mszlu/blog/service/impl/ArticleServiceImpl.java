@@ -215,8 +215,8 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		articleMapper.updateById(article);
 		
-		Map<String, String> map = new HashMap<>();
-		map.put("id", article.getId().toString());
+		Map<String,String> map = new HashMap<>();
+		map.put("id",article.getId().toString());
 		return Result.success(map);
 	}
 	
