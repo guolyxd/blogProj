@@ -14,6 +14,8 @@ public interface TagsService {
 
 	Result findAllDetail();
 
+	Result findDetailById(Long id);
+
 
 
 }
