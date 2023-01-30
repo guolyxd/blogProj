@@ -12,6 +12,8 @@ public interface TagsService {
 
 	Result findAll();
 
+	Result findAllDetail();
+
 
 
 }

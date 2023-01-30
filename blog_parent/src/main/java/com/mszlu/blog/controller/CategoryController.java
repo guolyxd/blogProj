@@ -21,5 +21,11 @@ public class CategoryController {
 		
 	}
 	
+	@GetMapping("detail")
+	public Result listCategoriesDetail() {
+		return categoryService.findAllDetail();
+		
+	}
+	
 
 }
