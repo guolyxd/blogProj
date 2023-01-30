@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mszlu.blog.common.aop.LogAnnotation;
 import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.vo.Result;
-import com.mszlu.blog.vo.params.ArticleBodyParam;
 import com.mszlu.blog.vo.params.ArticlePara;
 import com.mszlu.blog.vo.params.PageParams;
 

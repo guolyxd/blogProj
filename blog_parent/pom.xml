@@ -117,6 +117,13 @@
             <artifactId>joda-time</artifactId>
             <version>2.10.10</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>[7.7.0, 7.7.99]</version>
+        </dependency>
+
     </dependencies>
 
     <build>
