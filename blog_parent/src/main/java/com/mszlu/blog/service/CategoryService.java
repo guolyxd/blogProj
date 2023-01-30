@@ -11,4 +11,6 @@ public interface CategoryService {
 
 	Result findAllDetail();
 
+	Result findAllDetailById(Long id);
+
 }

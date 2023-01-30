@@ -54,7 +54,11 @@ public class ArticleServiceImpl implements ArticleService {
          */
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        //是否置顶进行排序,        //时间倒序进行排列相当于order by create_data desc
+        if(pageParams.getCategoryId() != null) {
+        	queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+        }
+        //是否置顶进行排序,        
+        //时间倒序进行排列相当于order by create_data desc
         queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
         Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
         //分页查询用法 https://blog.csdn.net/weixin_41010294/article/details/105726879
