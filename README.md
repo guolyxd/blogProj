@@ -1,5 +1,5 @@
 # Person Blog 
-This project purposed to setup a person blog for cutomer to publish articles, or something else they want to record.
+This project is purposed to setup a person blog for cutomer to publish articles, or something else they want to record.
 
 
 ## Technique Stack
