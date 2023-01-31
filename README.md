@@ -4,13 +4,13 @@ This project purposed to setup a person blog for cutomer to publish articles, or
 
 # Technique Stack
 
-  Sprintboot + Vue
-  Mybitus 
-  Redis
-  MySql
+  Sprintboot + VUE  
+  Mybitus   
+  Redis  
+  MySql  
 
 # IDE
-  Eclipse
-  Visual studio Code
-  Navicat
-  Premium
+  Eclipse  
+  Visual Studio Code  
+  Navicat  
+  Premium  
