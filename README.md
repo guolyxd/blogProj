@@ -2,13 +2,14 @@
 This project purposed to setup a person blog for cutomer to publish articles, or something else they want to record.
 
 
-# Technique Stack
+Technique Stack
+
 Sprintboot + Vue
-Mybitus 
+Mybitus 
 Redis
 MySql
+IDE
 
-# IDE
 Eclipse
 Visual studio Code
 Navicat
