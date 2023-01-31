@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mszlu.blog.common.aop.LogAnnotation;
+import com.mszlu.blog.common.cache.Cache;
 import com.mszlu.blog.service.ArticleService;
 import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.ArticlePara;
@@ -22,6 +23,7 @@ public class ArticleController {
 
 	@PostMapping
 	@LogAnnotation(module="Article",operator="Get article list")
+	@Cache(expire = 1*60*1000, name = "list Article in home page")
 	public Result articles(@RequestBody PageParams pageParams)
 	   {
 		return articleService.listArticle(pageParams);
