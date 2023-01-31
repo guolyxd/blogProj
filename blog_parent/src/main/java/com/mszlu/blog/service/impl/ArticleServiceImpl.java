@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mszlu.blog.dao.mapper.ArticleBodyMapper;
 import com.mszlu.blog.dao.mapper.ArticleMapper;
@@ -49,36 +50,49 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Result listArticle(PageParams pageParams) {
-        /**
-         * 1、分页查询article数据库表
-         */
-        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        if(pageParams.getCategoryId() != null) {
-        	queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
-        }
-        List<Long> articleIdList = new ArrayList<>();
-        if(pageParams.getTagId() != null){
-        	LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        	articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
-        	List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
-        	for(ArticleTag articleTag : articleTags) {
-        		articleIdList.add(articleTag.getArticleId());
-        	}
-        	if(articleIdList.size() > 0){
-        		queryWrapper.in(Article::getId, articleIdList);
-        	}
-        }
-        //是否置顶进行排序,        
-        //时间倒序进行排列相当于order by create_data desc
-        queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-        //分页查询用法 https://blog.csdn.net/weixin_41010294/article/details/105726879
-        List<Article> records = articlePage.getRecords();
-        // 要返回我们定义的vo数据，就是对应的前端数据，不应该只返回现在的数据需要进一步进行处理
-        List<ArticleVo> articleVoList =copyList(records,true,true);
-        return Result.success(articleVoList);
+    	Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+    	IPage<Article> articleIPage = articleMapper.listArticle(page, pageParams.getCategoryId(),
+    			                        pageParams.getTagId(),
+    			                        pageParams.getMonth(), 
+    			                        pageParams.getYear());
+    	List<Article> records = articleIPage.getRecords();
+    	return Result.success(copyList(records, true, true));
     }
+    
+    
+//    @Override
+//    public Result listArticle(PageParams pageParams) {
+//        /**
+//         * 1、分页查询article数据库表
+//         */
+//        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+//        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+//        if(pageParams.getCategoryId() != null) {
+//        	queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+//        }
+//        List<Long> articleIdList = new ArrayList<>();
+//        if(pageParams.getTagId() != null){
+//        	LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        	articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId, pageParams.getTagId());
+//        	List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+//        	for(ArticleTag articleTag : articleTags) {
+//        		articleIdList.add(articleTag.getArticleId());
+//        	}
+//        	if(articleIdList.size() > 0){
+//        		queryWrapper.in(Article::getId, articleIdList);
+//        	}
+//        }
+//        //是否置顶进行排序,        
+//        //时间倒序进行排列相当于order by create_data desc
+//        queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
+//        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
+//        //分页查询用法 https://blog.csdn.net/weixin_41010294/article/details/105726879
+//        List<Article> records = articlePage.getRecords();
+//        // 要返回我们定义的vo数据，就是对应的前端数据，不应该只返回现在的数据需要进一步进行处理
+//        List<ArticleVo> articleVoList =copyList(records,true,true);
+//        return Result.success(articleVoList);
+//    }
+    
 
     private List<ArticleVo> copyList(List<Article> records,boolean isTag,boolean isAuthor) {
 

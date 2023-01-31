@@ -13,13 +13,13 @@ public class Article {
 	private Long bodyId;
 	private String title;
 	private String summary;
-	private int viewCounts;
-	private int commentCounts;
+	private Integer viewCounts;
+	private Integer commentCounts;
 
 	private Long authorId;
 	private Long categoryId;
 
-	private int weight = Article_Common;
+	private Integer weight = Article_Common;
 	private Long createDate;
 
 
