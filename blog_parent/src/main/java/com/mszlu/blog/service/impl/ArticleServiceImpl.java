@@ -116,7 +116,7 @@ public class ArticleServiceImpl implements ArticleService {
     //"eop的作用是对应copyList，集合之间的copy分解成集合元素之间的copy
     private ArticleVo copy(Article article,boolean isTag,boolean isAuthor, boolean isBody, boolean isCategory){
         ArticleVo articleVo = new ArticleVo();
-        //BeanUtils.copyProperties用法   https://blog.csdn.net/Mr_linjw/article/details/50236279
+        articleVo.setId(String.valueOf(article.getId()));        //BeanUtils.copyProperties用法   https://blog.csdn.net/Mr_linjw/article/details/50236279
         BeanUtils.copyProperties(article, articleVo);
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
         //并不是所有的接口都需要标签和作者信息
@@ -217,7 +217,7 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setWeight(Article.Article_Common);
 		article.setViewCounts(0);
 		article.setCreateDate(System.currentTimeMillis());
-		article.setCategoryId(articlePara.getCategory().getId());
+		article.setCategoryId(Long.parseLong(articlePara.getCategory().getId()));
 		article.setCommentCounts(0);
 		article.setSummary(articlePara.getSummary());
 		article.setTitle(articlePara.getTitle());
@@ -229,7 +229,7 @@ public class ArticleServiceImpl implements ArticleService {
 			for(TagVo tag: tags) {
 			Long articleId = article.getId();
 			ArticleTag articleTag = new ArticleTag();
-			articleTag.setTagId(tag.getId());
+			articleTag.setTagId(Long.parseLong(tag.getId()));
 			articleTag.setArticleId(articleId);
 			articleTagMapper.insert(articleTag);
 			}

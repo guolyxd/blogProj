@@ -61,6 +61,7 @@ public class CommentsServiceImpl implements CommentsService{
 		
 		CommentVo commentVo = new CommentVo();
 		BeanUtils.copyProperties(comment, commentVo);
+		commentVo.setId(String.valueOf(comment.getId()));
 		
 		Long authorId = comment.getAuthorId();
 		UserVo userVo = this.sysUserService.findUserVoById(authorId);

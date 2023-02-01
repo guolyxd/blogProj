@@ -10,8 +10,8 @@ public class CommentVo {
     
 	//防止前端 精度损失 把id转为string
 	// 分布式id 比较长，传到前端 会有精度损失，必须转为string类型 进行传输，就不会有问题了
-	@JsonSerialize(using = ToStringSerializer.class)
-	private Long id;
+	//@JsonSerialize(using = ToStringSerializer.class)
+	private String id;
 	
     private UserVo author;
     private String content;
