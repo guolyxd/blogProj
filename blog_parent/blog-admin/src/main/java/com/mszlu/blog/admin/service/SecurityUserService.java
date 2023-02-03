@@ -10,6 +10,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import com.mszlu.blog.admin.pojo.Admin;
 
+
+/* author email : guolyxd@163.com  */
+/* Date: 2023/02/03  */
+
+
 @Component
 public class SecurityUserService implements UserDetailsService {
 	

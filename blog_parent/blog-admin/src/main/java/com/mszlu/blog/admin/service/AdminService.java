@@ -10,6 +10,11 @@ import com.mszlu.blog.admin.mapper.AdminMapper;
 import com.mszlu.blog.admin.pojo.Admin;
 import com.mszlu.blog.admin.pojo.Permission;
 
+/* author email : guolyxd@163.com  */
+/* Date: 2023/02/03  */
+/* Admin page username/password : admin/123456 */
+
+
 @Service
 public class AdminService {
 	
