@@ -58,7 +58,7 @@ public class SysUserServiceImpl implements SysUserService {
 		loginUserVo.setId(String.valueOf(sysUser.getId()));
 		loginUserVo.setAccount(sysUser.getAccount());
 		loginUserVo.setAvatar(sysUser.getAvatar());
-		loginUserVo.setNickName(sysUser.getNickname());
+		loginUserVo.setNickname(sysUser.getNickname());
 		
 		return Result.success(loginUserVo);
 	}
@@ -94,6 +94,8 @@ public class SysUserServiceImpl implements SysUserService {
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(sysUser, userVo);
         userVo.setId(String.valueOf(sysUser.getId()));
+        userVo.setNickname(sysUser.getNickname());
+        userVo.setAvatar(sysUser.getAvatar());
         return userVo;
 	}
 }
