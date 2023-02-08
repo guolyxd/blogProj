@@ -32,7 +32,7 @@ public class ArticleListener implements RocketMQListener<ArticleMessage>{
 		log.info("Received message:{}",message);
 		Long articleId = message.getArticleId();
 		String para = DigestUtils.md5Hex(articleId.toString());
-		String redisKey = "view_article::ArticleController::findArticleById" +para;
+		String redisKey = "view_article::ArticleController::findArticleById::" +para;
 		Result articleResult = articleService.findArticleById(articleId);
 		redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(articleResult),Duration.ofMillis(5*60*1000));
 		log.info("Updated cache:{}",redisKey);
