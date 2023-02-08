@@ -7,6 +7,7 @@ This project is purposed to setup a person blog for cutomer to publish articles,
   2. Mybitus   
   3. Redis  
   4. MySql  
+  5. RocketMQ   
 
 ## IDE
   1. Eclipse  
@@ -14,3 +15,5 @@ This project is purposed to setup a person blog for cutomer to publish articles,
   3. Navicat  
   4. Premium  
   5. Postman. 
+
+
