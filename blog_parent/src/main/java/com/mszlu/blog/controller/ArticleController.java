@@ -23,7 +23,7 @@ public class ArticleController {
 
 	@PostMapping
 	@LogAnnotation(module="Article",operator="Get article list")
-	@Cache(expire = 1*60*1000, name = "list Article in home page")
+	@Cache(expire = 5*60*1000, name = "list Article in home page")
 	public Result articles(@RequestBody PageParams pageParams)
 	   {
 		return articleService.listArticle(pageParams);
@@ -58,6 +58,12 @@ public class ArticleController {
 	@PostMapping("publish")
 	public Result publish(@RequestBody ArticlePara articlePara) {
 		return articleService.publish(articlePara);
+	}
+	
+	@PostMapping("write/{id}")
+	public Result amendArticleById(@PathVariable("id") Long articleId) {
+		return articleService.findArticleById(articleId);
+		
 	}
 
 }

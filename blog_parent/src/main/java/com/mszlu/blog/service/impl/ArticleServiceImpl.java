@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mszlu.blog.dao.mapper.ArticleBodyMapper;
 import com.mszlu.blog.dao.mapper.ArticleMapper;
@@ -26,6 +29,7 @@ import com.mszlu.blog.service.ThreadService;
 import com.mszlu.blog.utils.UserThreadLocal;
 import com.mszlu.blog.vo.Archive;
 import com.mszlu.blog.vo.ArticleBodyVo;
+import com.mszlu.blog.vo.ArticleMessage;
 import com.mszlu.blog.vo.ArticleTag;
 import com.mszlu.blog.vo.ArticleVo;
 import com.mszlu.blog.vo.Result;
@@ -44,6 +48,8 @@ public class ArticleServiceImpl implements ArticleService {
     private TagsService tagService;
     @Autowired
     private ArticleTagMapper articleTagMapper;
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
     
     @Autowired
     private SysUserService sysUserService;
@@ -213,21 +219,40 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		//article info
 		Article article = new Article();
-		article.setAuthorId(sysUser.getId());
-		article.setWeight(Article.Article_Common);
-		article.setViewCounts(0);
-		article.setCreateDate(System.currentTimeMillis());
-		article.setCategoryId(Long.parseLong(articlePara.getCategory().getId()));
-		article.setCommentCounts(0);
-		article.setSummary(articlePara.getSummary());
-		article.setTitle(articlePara.getTitle());
-		this.articleMapper.insert(article);
-		
+		boolean isEdit = false;
+		if (articlePara.getId() != null) {
+			article = new Article();
+			article.setId(articlePara.getId());
+			article.setSummary(articlePara.getSummary());
+			article.setTitle(articlePara.getTitle());
+			article.setCategoryId(Long.parseLong(articlePara.getCategory().getId()));
+			articleMapper.updateById(article);
+			isEdit=true;
+		} 
+		else 
+		{
+			article = new Article();
+			article.setId(articlePara.getId());
+			article.setSummary(articlePara.getSummary());
+			article.setTitle(articlePara.getTitle());
+			article.setCategoryId(Long.parseLong(articlePara.getCategory().getId()));
+			article.setAuthorId(sysUser.getId());
+			article.setWeight(Article.Article_Common);
+			article.setViewCounts(0);
+			article.setCreateDate(System.currentTimeMillis());
+			article.setCommentCounts(0);
+			this.articleMapper.insert(article);
+		}
 		//tag
 		List<TagVo> tags = articlePara.getTags();
 		if(tags != null) {
 			for(TagVo tag: tags) {
 			Long articleId = article.getId();
+			if(isEdit) {
+				LambdaQueryWrapper<ArticleTag> queryWrapper = Wrappers.lambdaQuery();
+				queryWrapper.eq(ArticleTag::getArticleId, articleId);
+				articleTagMapper.delete(queryWrapper);
+				}
 			ArticleTag articleTag = new ArticleTag();
 			articleTag.setTagId(Long.parseLong(tag.getId()));
 			articleTag.setArticleId(articleId);
@@ -236,17 +261,36 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		
 		//body
-		ArticleBody articleBody = new ArticleBody();
-		articleBody.setArticleId(article.getId());
-		articleBody.setContent(articlePara.getBody().getContent());
-		articleBody.setContentHtml(articlePara.getBody().getContentHtml());
-		articleBodyMapper.insert(articleBody);
-		article.setBodyId(articleBody.getId());
 		
-		articleMapper.updateById(article);
+		if(isEdit) {
+			ArticleBody articleBody = new ArticleBody();
+			articleBody.setArticleId(article.getId());
+			articleBody.setContent(articlePara.getBody().getContent());
+			articleBody.setContentHtml(articlePara.getBody().getContentHtml());
+			LambdaUpdateWrapper<ArticleBody> updateWrapper = Wrappers.lambdaUpdate();
+			updateWrapper.eq(ArticleBody::getArticleId, article.getId());
+			articleBodyMapper.update(articleBody, updateWrapper);
+		} else {
+			ArticleBody articleBody = new ArticleBody();
+			articleBody.setArticleId(article.getId());
+			articleBody.setContent(articlePara.getBody().getContent());
+			articleBody.setContentHtml(articlePara.getBody().getContentHtml());
+			articleBodyMapper.insert(articleBody);
+			
+			article.setBodyId(articleBody.getId());
+			articleMapper.updateById(article);
+		}
+		
 		
 		Map<String,String> map = new HashMap<>();
 		map.put("id",article.getId().toString());
+  //if is Edit, then need to sent msg to rocketMQ, ask to update cache.
+		if(isEdit) {
+			ArticleMessage articleMessage = new ArticleMessage();
+			articleMessage.setArticleId(article.getId());
+			rocketMQTemplate.convertAndSend("blog-update-article", articleMessage);
+		}
+		
 		return Result.success(map);
 	}
 	
