@@ -261,9 +261,8 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		
 		//body
-		
+		ArticleBody articleBody = new ArticleBody();
 		if(isEdit) {
-			ArticleBody articleBody = new ArticleBody();
 			articleBody.setArticleId(article.getId());
 			articleBody.setContent(articlePara.getBody().getContent());
 			articleBody.setContentHtml(articlePara.getBody().getContentHtml());
@@ -271,7 +270,6 @@ public class ArticleServiceImpl implements ArticleService {
 			updateWrapper.eq(ArticleBody::getArticleId, article.getId());
 			articleBodyMapper.update(articleBody, updateWrapper);
 		} else {
-			ArticleBody articleBody = new ArticleBody();
 			articleBody.setArticleId(article.getId());
 			articleBody.setContent(articlePara.getBody().getContent());
 			articleBody.setContentHtml(articlePara.getBody().getContentHtml());
