@@ -1,6 +1,7 @@
 package com.mszlu.blog.service.mq;
 
 import java.time.Duration;
+import java.util.Set;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -36,6 +37,12 @@ public class ArticleListener implements RocketMQListener<ArticleMessage>{
 		Result articleResult = articleService.findArticleById(articleId);
 		redisTemplate.opsForValue().set(redisKey, JSON.toJSONString(articleResult),Duration.ofMillis(5*60*1000));
 		log.info("Updated cache:{}",redisKey);
+		
+		Set<String> keys = redisTemplate.keys("list_Article*");
+		keys.forEach(s->{
+			redisTemplate.delete(s);
+			log.info("Delete article list cache:{}",s);
+		});
 		
 	}
 

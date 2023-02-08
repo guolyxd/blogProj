@@ -23,13 +23,14 @@ public class ArticleController {
 
 	@PostMapping
 	@LogAnnotation(module="Article",operator="Get article list")
-	@Cache(expire = 5*60*1000, name = "list Article in home page")
+	@Cache(expire = 5*60*1000, name = "list_Article")
 	public Result articles(@RequestBody PageParams pageParams)
 	   {
 		return articleService.listArticle(pageParams);
 		}
 
 	@PostMapping("hot")
+	@Cache(expire = 5*60*1000, name = "hot_article")
 	public Result hotArticles()
 	   {
 		int limit = 3 ;
@@ -37,6 +38,7 @@ public class ArticleController {
 		}
 
 	@PostMapping("new")
+	@Cache(expire = 5*60*1000, name = "new_article")
 	public Result newArticles()
 	   {
 		int limit = 3 ;
