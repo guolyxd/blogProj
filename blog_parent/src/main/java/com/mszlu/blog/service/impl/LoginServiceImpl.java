@@ -47,6 +47,7 @@ public class LoginServiceImpl implements LoginService{
 			return Result.fail(ErrorCode.PARAMS_ERROR.getCode(),ErrorCode.PARAMS_ERROR.getMsg());
 		}
 
+		//原始密码+salt生成加密后的密码
 		password = DigestUtils.md5Hex(password + slat);
 		SysUser sysUser = sysUserService.findUser(account, password);
 		if(sysUser == null) {

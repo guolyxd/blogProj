@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mszlu.blog.vo.Result;
 
+/*对所有加了controller注解的类进行异常拦截处理，也属于AOP处理*/
 @ControllerAdvice
 public class AllExceptionHandler {
 
