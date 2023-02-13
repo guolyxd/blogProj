@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer{
 	private LoginInterceptor loginInterceptor;
 
 	@Override
+	/*frontend port is 8080, backend is 8888,use this config file to visit cross domain*/
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**").allowedOrigins("http://localhost:8080");
 
