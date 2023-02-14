@@ -282,7 +282,8 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		Map<String,String> map = new HashMap<>();
 		map.put("id",article.getId().toString());
-  //if is Edit, then need to sent msg to rocketMQ, ask to update cache.
+		
+         //Once it edited, then need to send msg to rocketMQ, ask to update cache.
 		if(isEdit) {
 			ArticleMessage articleMessage = new ArticleMessage();
 			articleMessage.setArticleId(article.getId());

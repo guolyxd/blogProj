@@ -18,11 +18,12 @@ import com.mszlu.blog.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 
 /* Email: guolyxd@163.com 2023/01/31 */
-/* AOP define a point cut, point cut define the relationship of pointcut and notification */
+/* AOP define an aspect, aspect define the relationship of pointcut and notification */
 
 @Component
 @Aspect
 @Slf4j
+/*aspect*/
 public class CacheAspect {
 	
 	@Autowired
