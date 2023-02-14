@@ -18,6 +18,8 @@ import com.mszlu.blog.vo.Result;
 
 import lombok.extern.slf4j.Slf4j;
 
+/*登录拦截器*/
+
 @Component
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor{

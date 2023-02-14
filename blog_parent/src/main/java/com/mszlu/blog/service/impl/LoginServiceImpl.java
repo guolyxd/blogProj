@@ -20,7 +20,7 @@ import com.mszlu.blog.vo.Result;
 import com.mszlu.blog.vo.params.LoginPara;
 
 @Service
-@Transactional //添加事务，要不然会抛异常
+@Transactional //重点:添加事务，主要处理一些异常，例如:添加用户失败时数据库回滚，避免程序异常
 public class LoginServiceImpl implements LoginService{
 
 	@Autowired
