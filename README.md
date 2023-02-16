@@ -4,7 +4,7 @@ This project is purposed to setup a person blog for cutomer to publish articles,
 
 ## Technique Stack
   1. Sprintboot + VUE  
-  2. Mybitus   
+  2. Mybatis+Plus   
   3. Redis  
   4. MySql  
   5. RocketMQ   
